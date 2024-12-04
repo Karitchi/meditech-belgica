@@ -69,7 +69,7 @@ By utilizing concepts covered in class and using network simulators like GNS3, t
 | **VLAN 30** | **guest**      | WiFi-enabled Patient Devices                                                    | Guest WiFi for patients with secure internet access and possibly limited access to specific services.                             | 10.30.0.0  | 255.255.255.0   |
 | **VLAN 40** | **server**     | Intranet Server, Medical Records Server, Backup Server                          | Servers dedicated to internal operations, file sharing, records, backups, and other important services.                           | 10.40.0.0  | 255.255.255.0   |
 | **VLAN 50** | **dmz**        | Extranet Server (Web)                                                           | Devices for external-facing website.                                                                                              | 10.50.0.0  | 255.255.255.0   |
-| **VLAN 60** | **core**       | Layer 3 Switch 1, Layer 3 Switch 2, pfSense LAN Interface                       | Core network devices for routing between VLANs. Dedicated subnet for interconnection between Layer 3 switches and pfSense router. | 10.60.0.0  | 255.255.255.248 |
+| **VLAN 60** | **core**       | Layer 3 Switch 1, Layer 3 Switch 2, pfSense LAN Interface                       | Core network devices for routing between VLANs. Dedicated subnet for interconnection between Layer 3 switches and pfSense router. | 10.60.0.0  | 255.255.255.252 |
 | **VLAN 99** | **management** | Core Router (pfSense), Layer 3 Switches, Layer 2 Switches, Bastion Host (Admin) | Routing, security devices, and management of communication between different VLANs and external networks.                         | 10.99.0.0  | 255.255.255.0   |
 
 ---
