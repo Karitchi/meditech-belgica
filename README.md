@@ -62,14 +62,15 @@ By utilizing concepts covered in class and using network simulators like GNS3, t
 
 ### VLANs and Subnets
 
-| **VLAN**    | **Name**       | **Devices/Servers**                                                             | **Purpose**                                                                                               | **Subnet** | **CIDR/Mask** |
-| ----------- | -------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ---------- | ------------- |
-| **VLAN 10** | **doctor**     | Doctors' Workstations, Medical Devices, Intranet Server, Medical Records Server | Internal devices related to doctors' consultations, medical equipment, and medical records.               | 10.10.0.0  | 255.255.255.0 |
-| **VLAN 20** | **secretary**  | Secretaries' Workstations, Active Directory, Backup Server, Layer 2 Switches    | Internal administrative devices for managing patient scheduling, billing, authentication, and backups.    | 10.20.0.0  | 255.255.255.0 |
-| **VLAN 30** | **guest**      | WiFi-enabled Patient Devices                                                    | Guest WiFi for patients with secure internet access and possibly limited access to specific services.     | 10.30.0.0  | 255.255.255.0 |
-| **VLAN 40** | **server**     | Intranet Server, Medical Records Server, Backup Server                          | Servers dedicated to internal operations, file sharing, records, backups, and other important services.   | 10.40.0.0  | 255.255.255.0 |
-| **VLAN 50** | **dmz**        | Extranet Server (Web)                                                           | Devices for external-facing website.                                                                      | 10.50.0.0  | 255.255.255.0 |
-| **VLAN 99** | **management** | Core Router (pfSense), Layer 3 Switches, Layer 2 Switches, Bastion Host (Admin) | Routing, security devices, and management of communication between different VLANs and external networks. | 10.99.0.0  | 255.255.255.0 |
+| **VLAN**    | **Name**       | **Devices/Servers**                                                             | **Purpose**                                                                                                                       | **Subnet** | **CIDR/Mask**   |
+| ----------- | -------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ---------- | --------------- |
+| **VLAN 10** | **doctor**     | Doctors' Workstations, Medical Devices, Intranet Server, Medical Records Server | Internal devices related to doctors' consultations, medical equipment, and medical records.                                       | 10.10.0.0  | 255.255.255.0   |
+| **VLAN 20** | **secretary**  | Secretaries' Workstations, Active Directory, Backup Server, Layer 2 Switches    | Internal administrative devices for managing patient scheduling, billing, authentication, and backups.                            | 10.20.0.0  | 255.255.255.0   |
+| **VLAN 30** | **guest**      | WiFi-enabled Patient Devices                                                    | Guest WiFi for patients with secure internet access and possibly limited access to specific services.                             | 10.30.0.0  | 255.255.255.0   |
+| **VLAN 40** | **server**     | Intranet Server, Medical Records Server, Backup Server                          | Servers dedicated to internal operations, file sharing, records, backups, and other important services.                           | 10.40.0.0  | 255.255.255.0   |
+| **VLAN 50** | **dmz**        | Extranet Server (Web)                                                           | Devices for external-facing website.                                                                                              | 10.50.0.0  | 255.255.255.0   |
+| **VLAN 60** | **core**       | Layer 3 Switch 1, Layer 3 Switch 2, pfSense LAN Interface                       | Core network devices for routing between VLANs. Dedicated subnet for interconnection between Layer 3 switches and pfSense router. | 10.60.0.0  | 255.255.255.248 |
+| **VLAN 99** | **management** | Core Router (pfSense), Layer 3 Switches, Layer 2 Switches, Bastion Host (Admin) | Routing, security devices, and management of communication between different VLANs and external networks.                         | 10.99.0.0  | 255.255.255.0   |
 
 ---
 
