@@ -11,7 +11,13 @@ By utilizing concepts covered in class and using network simulators like GNS3, t
 ## Table of Contents
 
 1. [Introduction](#introduction)
-2. [Device Plan](#device-plan)
+2. [Specification] (#Spécification)
+   2.1. [Project Objectives](###Project Objectives)
+   2.2. [Functional Requirements](###Functional Requirements)
+   2.3. [Technical constraints](###Technical constraints)
+   2.4. [Deliverables](###Deliverables)
+   2.5. [MVP (Minimum Viable Product)](###MVP (Minimum Viable Product))
+2. [Architecture and Network Infrastructure](#Architecture and Network Infrastructure)
    - Network Devices
    - Services Devices
    - End Devices
@@ -22,6 +28,54 @@ By utilizing concepts covered in class and using network simulators like GNS3, t
 6. [Conclusion](#conclusion)
 
 ---
+
+### Project Objectives
+
+The primary objective is to implement a secure and efficient IT infrastructure that enables critical healthcare operations. This includes secure medical records management, online appointment scheduling, patient data protection, and secure WiFi connectivity for both staff and patients.
+
+Beyond security, the infrastructure must be reliable and scalable to support daily medical operations. Using GNS3 simulation, we will demonstrate how proper network segmentation, access controls, and security protocols can protect sensitive medical information while maintaining system performance and accessibility.
+
+### Functional Requirements
+
+#### Network Infrastructure and Security
+
+Active Directory setup for authentication, DNS, and DHCP services
+Secure network segmentation (VLAN) for medical staff and patients
+Firewall configuration and access control lists
+VPN setup for remote access
+
+#### Essential Services
+
+Static website hosting
+WiFi network with separate access for staff and patients
+File sharing system for medical records
+Office 365 email service integration
+
+#### Technical constraints
+
+Use of a simulator (GNS3 or equivalent)
+Justified choice of operating systems
+Complete documentation of configurations
+Integration of security concepts learned in class
+
+### Deliverables
+
+* GNS3 network simulation
+* Technical report including:
+  * Configuration files and documentation
+  * Logical topology with security mechanisms
+  * Team member contributions
+* Visual presentation support
+
+### MVP (Minimum Viable Product)
+
+The initial prototype will demonstrate:
+* Basic network topology
+* Core Active Directory configuration
+* Minimal static website
+* Essential security mechanisms (firewalls, VLANs)
+
+
 
 ## Device Plan
 
@@ -41,7 +95,7 @@ By utilizing concepts covered in class and using network simulators like GNS3, t
 | **Active Directory**            | Windows Server (with AD DS)                   | Centralized authentication, user management, group policies, and DNS/DHCP services for internal users.         |
 | **Intranet Server**             | Linux Server                                  | Hosts internal services (e.g., file sharing, internal web apps, collaboration tools) for staff use.            |
 | **Medical Records Server**      | Windows/Linux Server (PACS system)            | Secure storage and sharing of medical records between doctors while ensuring patient confidentiality.          |
-| **Extranet Server (Web)**       | Web Server (Linux/Apache or Windows IIS)      | Public-facing website for appointment booking, patient interaction, and access to MediTech Belgica’s services. |
+| **Extranet Server (Web)**       | Web Server (Apache)      | Public-facing website for appointment booking, patient interaction, and access to MediTech Belgica’s services. |
 | **Backup Server**               | Dedicated Backup Server                       | Manages regular backup of critical data (medical records, user data, server configurations).                   |
 | **Cloud Services (Office 365)** | Microsoft Cloud (External email/Office Suite) | Manages external email, calendar, and document collaboration tools for the organization.                       |
 
@@ -49,41 +103,254 @@ By utilizing concepts covered in class and using network simulators like GNS3, t
 
 | **Role**                         | **Device**                             | **Purpose**                                                                                                            |
 | -------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| **Doctors' Workstations**        | Desktop PCs or Laptops (Windows/Linux) | Access medical records, internal services, email, and manage patient consultations.                                    |
-| **Secretaries' Workstations**    | Desktop PCs or Laptops (Windows/Linux) | Manage patient appointments, scheduling, billing, and perform administrative tasks.                                    |
+| **Doctors' Workstations**        | Desktop PCs or Laptops (Windows) | Access medical records, internal services, email, and manage patient consultations.                                    |
+| **Secretaries' Workstations**    | Desktop PCs or Laptops (Windows) | Manage patient appointments, scheduling, billing, and perform administrative tasks.                                    |
 | **Medical Devices**              | Network-connected Medical Equipment    | Devices used for patient diagnosis and treatment that require network access for data sharing (e.g., imaging systems). |
 | **WiFi-enabled Patient Devices** | Smartphones/Tablets (iOS/Android)      | Patients can access the secure guest WiFi to browse the internet and access MediTech Belgica’s services.               |
-| **Administrator Workstations**   | Desktop PCs or Laptops (Windows/Linux) | IT staff or system administrators use these for managing servers, network devices, and infrastructure.                 |
-| **Bastion Host Access (Admin)**  | Admin PC or Terminal (Windows/Linux)   | Provides secure access for IT administrators to manage infrastructure and perform troubleshooting tasks.               |
+| **Administrator Workstations**   | Desktop PCs or Laptops (Windows) | IT staff or system administrators use these for managing servers, network devices, and infrastructure.                 |
+| **Bastion Host Access (Admin)**  | Admin PC or Terminal (Windows)   | Provides secure access for IT administrators to manage infrastructure and perform troubleshooting tasks.               |
 
 ---
 
-## Network Plan
+### Proposed Architecture and Network Infrastructure
 
-### VLANs and Subnets
+| VLAN ID | Name | Devices/Servers | Purpose | Subnet | CIDR/Mask | Security Focus |
+|---------|------|-----------------|----------|---------|------------|----------------|
+| 10 | doctor | Doctors' Workstations, Medical Records Server | Secure medical data access | 10.10.0.0 | 255.255.255.0 | Data confidentiality, access control |
+| 20 | secretary | Workstations, AD, Backup Server | Patient management, scheduling | 10.20.0.0 | 255.255.255.0 | Identity management, data backup |
+| 30 | guest | WiFi Access Points | Patient internet access | 10.30.0.0 | 255.255.255.0 | Network isolation, bandwidth control |
+| 40 | server | Intranet, Records, Backup Servers | Internal services | 10.40.0.0 | 255.255.255.0 | Service availability, data integrity |
+| 50 | dmz | Web Server | Public website hosting | 10.50.0.0 | 255.255.255.0 | Perimeter security, access limitation |
+| 60 | core | L3 Switches, pfSense LAN | Network infrastructure | 10.60.0.0 | 255.255.255.252 | Infrastructure security, routing |
+| 99 | management | pfSense, Switches, Admin Host | Network administration | 10.99.0.0 | 255.255.255.0 | Privileged access, monitoring |
 
-| **VLAN**    | **Name**       | **Devices/Servers**                                                             | **Purpose**                                                                                                                       | **Subnet** | **CIDR/Mask**   |
-| ----------- | -------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ---------- | --------------- |
-| **VLAN 10** | **doctor**     | Doctors' Workstations, Medical Devices, Intranet Server, Medical Records Server | Internal devices related to doctors' consultations, medical equipment, and medical records.                                       | 10.10.0.0  | 255.255.255.0   |
-| **VLAN 20** | **secretary**  | Secretaries' Workstations, Active Directory, Backup Server, Layer 2 Switches    | Internal administrative devices for managing patient scheduling, billing, authentication, and backups.                            | 10.20.0.0  | 255.255.255.0   |
-| **VLAN 30** | **guest**      | WiFi-enabled Patient Devices                                                    | Guest WiFi for patients with secure internet access and possibly limited access to specific services.                             | 10.30.0.0  | 255.255.255.0   |
-| **VLAN 40** | **server**     | Intranet Server, Medical Records Server, Backup Server                          | Servers dedicated to internal operations, file sharing, records, backups, and other important services.                           | 10.40.0.0  | 255.255.255.0   |
-| **VLAN 50** | **dmz**        | Extranet Server (Web)                                                           | Devices for external-facing website.                                                                                              | 10.50.0.0  | 255.255.255.0   |
-| **VLAN 60** | **core**       | Layer 3 Switch 1, Layer 3 Switch 2, pfSense LAN Interface                       | Core network devices for routing between VLANs. Dedicated subnet for interconnection between Layer 3 switches and pfSense router. | 10.60.0.0  | 255.255.255.252 |
-| **VLAN 99** | **management** | Core Router (pfSense), Layer 3 Switches, Layer 2 Switches, Bastion Host (Admin) | Routing, security devices, and management of communication between different VLANs and external networks.                         | 10.99.0.0  | 255.255.255.0   |
+#### Design Principles
+- Clear network segmentation
+- Simple and maintainable structure
+- Defense in depth strategy
+- Principle of least privilege
 
----
+#### Best Practices
+- Systematic VLAN numbering
+- Consistent subnet allocation
+- Separated medical and public traffic
+- Isolated management access
+- DMZ for external services
+- Security zone isolation
+- Access control strategies
+- Infrastructure monitoring
 
-## Configuration and Security Measures
+### Configuration and Security Measures
 
-This section will detail the specific configurations implemented to ensure the network is secure, including:
+This section will detail the specific configurations implemented to ensure the network is secure.
 
-- **VLAN Configuration**: Detailed setup for each VLAN and their respective purposes.
-- **Routing and Firewall Rules**: Configuration for pfSense and Layer 3 switches to ensure inter-VLAN routing and security.
-- **Access Control**: How devices are segmented and secured to ensure proper access control.
-- **Encryption**: Measures taken to protect sensitive data (e.g., medical records) in transit and at rest.
+#### Network Core Layer at MediTech Belgica
 
----
+The core layer is where our medical center's network begins. Using a single pfSense firewall, we manage critical security and routing for our entire infrastructure. For our school project, we chose this simplified yet efficient design to thoroughly understand core networking concepts.
+
+Our pfSense connects to three key elements. First, there's our bastion host - a dedicated management computer on the 10.99.0.0/24 network. This host is essential for securely configuring pfSense through its web interface:
+
+```
+# Management Access Configuration via Web Interface
+Interface: Management (em3)
+Network: 10.99.0.0/24
+
+Rule Set:
+- Allow HTTPS access from bastion (10.99.0.10)
+- Log and deny all other management attempts
+```
+
+Second, we connect the appointment system in our DMZ (10.50.0.0/24). This public-facing service needs careful security rules:
+
+```
+# DMZ Configuration via Web Interface
+Interface: DMZ (em2)
+Network: 10.50.0.0/24
+
+External Access Rules:
+- Allow internet users to access appointment portal 
+- Permit DMZ server to receive updates
+- Block all DMZ access to internal networks
+- Log all connection attempts
+```
+
+Third, we handle patient WiFi directly through pfSense (10.30.0.0/24). We keep it separate from our internal networks for enhanced security:
+
+```
+# Patient WiFi Configuration via Web Interface
+Interface: WiFi (em4)
+Network: 10.30.0.0/24
+
+Control Rules:
+- Enable internet access for patients
+- Block access to all medical systems
+- Set 20Mbps bandwidth limit
+- Enable guest portal authentication
+```
+
+The internal medical records web interface, despite being web-based, lives inside our secure server VLAN (10.40.0.0/24) behind our distribution layer. Only authorized internal staff can access it through proper authentication.
+
+This core configuration ensures our medical facility maintains proper network segmentation, with each service placed exactly where it needs to be for optimal security and performance. Every rule and configuration serves a specific purpose in protecting our medical operations while providing necessary services to patients.
+
+From here, our core pfSense connects to our distribution layer switches, where we'll manage internal traffic between different medical departments.
+
+#### Distribution Layer at MediTech Belgica
+
+After our core pfSense firewall, the distribution layer acts like a smart traffic controller for our medical center. Here, we use two Cisco Layer 3 switches (let's call them DIST-SW1 and DIST-SW2) that connect to both our core pfSense and our access layer switches where all our medical staff's devices connect.
+
+Think of these distribution switches like two highly coordinated traffic officers - if one gets sick, the other can handle all the traffic alone. This is crucial because doctors and nurses can't afford network downtime when accessing patient records. Here's how we make this happen:
+
+Hot Standby Router Protocol (HSRP)
+
+HSRP makes our two distribution switches work together. Imagine two receptionists at a desk - even if one takes a break, patients are still greeted seamlessly. Here's how we configure this on our switches:
+
+```
+! DIST-SW1 Configuration
+interface Vlan10
+ description "Medical Staff Network"
+ ip address 10.10.0.2 255.255.255.0
+ hsrp 10
+  priority 110
+  preempt
+  authentication md5 key-chain hsrp-med
+  ip 10.10.0.1
+
+! DIST-SW2 Configuration (Backup)
+interface Vlan10
+ description "Medical Staff Network"
+ ip address 10.10.0.3 255.255.255.0
+ hsrp 10
+  priority 90
+  authentication md5 key-chain hsrp-med
+  ip 10.10.0.1
+```
+
+EtherChannel Implementation
+
+When our radiologists send large medical images across the network, we need lots of bandwidth. EtherChannel is like having multiple lanes on a highway instead of just one. We connect our distribution switches using multiple links that act as one big pipe:
+
+```
+! DIST-SW1 Configuration
+interface range GigabitEthernet1/0/1-4
+ description "EtherChannel to DIST-SW2"
+ channel-protocol lacp
+ channel-group 1 mode active
+ no shutdown
+
+interface Port-channel1
+ description "Distribution Switch Interconnect"
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40
+```
+
+OSPF Routing
+
+For network traffic to flow smoothly between different departments, we need smart routing. OSPF helps our switches learn the best paths automatically, like a GPS system constantly updating its routes:
+
+```
+! Both Distribution Switches
+router ospf 1
+ router-id 10.60.0.2
+ network 10.60.0.0 0.0.0.255 area 0
+ network 10.10.0.0 0.0.0.255 area 0
+ passive-interface default
+ no passive-interface GigabitEthernet1/0/5
+
+interface GigabitEthernet1/0/5
+ description "Link to Core pfSense"
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 secure_ospf_key
+```
+
+Inter-VLAN Routing
+
+Different departments need different levels of security. Inter-VLAN routing lets us keep departments separate while still allowing necessary communication:
+
+```
+! DIST-SW1 Configuration
+ip access-list extended MEDICAL_TO_ADMIN
+ permit ip 10.10.0.0 0.0.0.255 10.20.0.0 0.0.0.255
+ deny ip any any log
+
+interface Vlan20
+ description "Administrative Staff"
+ ip address 10.20.0.2 255.255.255.0
+ ip access-group MEDICAL_TO_ADMIN in
+```
+
+These distribution switches connect upward to our pfSense core and downward to our access layer switches. They ensure that:
+- Doctors can always reach patient records with the help of HSRP
+- Medical images transfer quickly through EtherChannel
+- Network traffic finds the best path using OSPF
+- Different departments stay securely separated yet connected through smart VLAN routing
+
+
+#### Access Layer at MediTech Belgica
+
+The access layer connects all our internal medical staff devices to the network. We use four Cisco Layer 2 switches (ACC-SW1 through ACC-SW4). Unlike patient WiFi which connects directly through pfSense for security isolation, these access switches serve our medical and administrative staff.
+
+Internal Medical Records Web Access
+
+Our medical records system needs to be both secure and easily accessible to authorized staff. Each access switch port connecting to a medical workstation is configured like this:
+
+```
+! ACC-SW1 Configuration
+interface GigabitEthernet0/1
+ description "Doctor Office - Medical Records Access"
+ switchport mode access
+ switchport access vlan 10
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security mac-address sticky
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+```
+
+The internal medical records web server resides in VLAN 40 (Server VLAN), accessible only through secured staff VLANs. This ensures that doctors and authorized staff can access patient records while keeping them completely separate from the public-facing appointment system in the DMZ.
+
+Department Segregation
+
+Each department gets its own VLAN to maintain security:
+
+```
+! ACC-SW2 Configuration
+vtp domain meditechbelgica
+vtp mode client
+vtp password secure_vtp_key
+
+! Medical Staff Port
+interface GigabitEthernet0/2
+ description "Nurse Station"
+ switchport mode access
+ switchport access vlan 10
+ switchport port-security
+ storm-control broadcast level 20
+
+! Administrative Staff Port
+interface GigabitEthernet0/3
+ description "Reception Desk"
+ switchport mode access
+ switchport access vlan 20
+ switchport port-security
+```
+
+Uplink Redundancy
+
+Our medical staff needs reliable access to records and systems, so we configure redundant uplinks to our distribution switches:
+
+```
+! ACC-SW3 Configuration
+interface range GigabitEthernet0/23-24
+ description "Uplink to Distribution Layer"
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,40
+ switchport trunk native vlan 99
+ spanning-tree guard root
+```
+
+These access switches focus purely on internal medical operations. By keeping patient WiFi separate on pfSense and the medical records system in a secure VLAN, we create clear security boundaries. Medical staff can efficiently access patient records while external patient access remains isolated through pfSense's DMZ and separate WiFi network.
+
+This design ensures that sensitive internal medical systems stay completely separate from patient-accessible networks, much like how a hospital keeps treatment areas separate from public waiting rooms.
 
 ## Implementation
 
@@ -102,3 +369,25 @@ In this section, the project’s outcomes will be summarized, including:
 - The security features implemented to ensure the integrity of the MediTech Belgica network.
 - The roles of each group member in completing the project.
 - Lessons learned and potential improvements for future iterations of the project.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Learning Objectives
+- Network segmentation principles
+- VLAN implementation
+- IP addressing scheme
+- Security zone isolation
+- Access control strategies
+- Infrastructure monitoring
