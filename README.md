@@ -6,6 +6,11 @@ This project, developed as part of the **Sécurité des Réseaux** course, focus
 
 By utilizing concepts covered in class and using network simulators like GNS3, this project demonstrates the integration of security mechanisms to safeguard sensitive data, ensure secure communications, and support the organization’s operations. The infrastructure includes both internal services (Active Directory, medical record management) and external services (a public website).
 
+Shemas :
+
+![image](https://github.com/user-attachments/assets/e321601d-10ce-4728-afc5-15caa954d46d)
+
+
 ---
 
 ## Table of Contents
