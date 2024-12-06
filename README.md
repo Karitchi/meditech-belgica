@@ -352,42 +352,47 @@ These access switches focus purely on internal medical operations. By keeping pa
 
 This design ensures that sensitive internal medical systems stay completely separate from patient-accessible networks, much like how a hospital keeps treatment areas separate from public waiting rooms.
 
-## Implementation
 
-This section will explain how the infrastructure is implemented, detailing the following:
 
-- **Software Used**: Description of the tools and simulators used to create the network.
-- **Virtualization**: The setup of virtual machines and the environment used for testing and implementation (e.g., GNS3 or Proxmox).
-- **Challenges and Solutions**: A brief overview of any challenges faced during the implementation and how they were resolved.
+## Network Infrastructure Implementation at MediTech Belgica
 
----
+For our school project, we designed and implemented a secure medical center network using three distinct layers. This approach helps us understand network architecture while ensuring both security and efficiency.
+
+### Core Layer Implementation
+
+At the heart of our network sits a pfSense firewall. We chose pfSense because it provides enterprise-level security features while remaining accessible for our learning environment. Through our bastion host, we can safely configure pfSense using its web interface. This setup is particularly important because misconfiguration of core security could expose sensitive medical data.
+
+We connected three critical elements to our pfSense. First, the bastion host lives in the management VLAN (10.99.0.0/24). Think of this as our secure control room - only network administrators can access it, and only through strict security protocols. From this host, we configure all pfSense settings and monitor network health.
+
+Second, we placed our appointment booking system in a DMZ (10.50.0.0/24). This separation is crucial - patients need to book appointments online, but this public-facing service must never provide a path into our internal medical systems. The DMZ acts like a secure reception area, separate from where we keep sensitive patient records.
+
+Third, we handle patient WiFi directly through pfSense (10.30.0.0/24). By connecting guest WiFi at the core rather than through internal switches, we create a complete separation between patient internet access and our medical network. This design prevents any possibility of unauthorized access to medical systems through the guest network.
+
+
+### Distribution Layer Implementation
+
+In the middle of our network, we used two advanced Cisco switches. These switches needed to be powerful and redundant because they handle all traffic between our medical departments. When a doctor accesses patient records or a secretary schedules appointments, these switches ensure the data reaches its destination reliably and securely.
+
+Our distribution switches connect upward to pfSense and downward to simpler department switches. This arrangement lets us enforce security policies effectively. For example, we can ensure that only authorized medical staff can access patient records, while administrative staff can access scheduling systems but not medical data.
+
+### Access Layer Implementation
+
+At the edge of our network, where doctors, nurses, and staff actually connect their computers, we have standard Cisco switches. Think of these switches as the doorways into our network - each port needs to be configured correctly to maintain our security. 
+
+When a doctor plugs their computer into an office network port, they should only be able to access the resources they need. We achieve this by putting each department into its own virtual network (VLAN). Doctors' workstations go into VLAN 10, while secretaries' computers connect to VLAN 20. This separation isn't just for organization - it's a critical security measure that prevents problems in one department from affecting others.
+
+One of our most important systems, the Windows Server 2022, lives in VLAN 40. This server handles user authentication and controls who can access what resources. By placing it in its own VLAN, we protect it from potential issues in user networks while ensuring it remains accessible to those who need it.
+
+## Implementation Approach
+
+For our project, we decided to use GNS3 with a server-client setup. This was new for us - in class, we usually work with pre-configured virtual machines. Setting up our own GNS3 server taught us a lot about network virtualization. It also let our team work together more efficiently, as we could all connect to the same network simulation.
+
+The biggest challenge was learning how to add new devices to GNS3. Unlike our classroom exercises where everything is pre-installed, we had to figure out how to integrate pfSense, Windows Server, and our Cisco switches. Each device needed specific configuration to work in our virtual environment.
+
+Working as a team made these challenges easier to overcome. Nicolas and Louis became our pfSense experts, spending time understanding its security features and how to configure them properly. Meanwhile, Alexis and Noël focused on making sure our Windows Server worked correctly and that all our devices could communicate properly.
+
+When we hit roadblocks - like when we first tried to get the Windows Server talking to our switches - we would brainstorm together. Someone would suggest an idea, another would test it, and we'd all learn from the results. This approach helped us understand not just how to build a network, but how to troubleshoot problems effectively.
 
 ## Conclusion
 
-In this section, the project’s outcomes will be summarized, including:
-
-- The security features implemented to ensure the integrity of the MediTech Belgica network.
-- The roles of each group member in completing the project.
-- Lessons learned and potential improvements for future iterations of the project.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Learning Objectives
-- Network segmentation principles
-- VLAN implementation
-- IP addressing scheme
-- Security zone isolation
-- Access control strategies
-- Infrastructure monitoring
+We learned that building a secure medical network isn't just about following a recipe - it's about understanding why each piece matters and how they work together. Every decision, from where to place the guest WiFi to how to configure switch ports, needed to balance security with usability. A medical center needs to protect patient data while still making it accessible to authorized staff, and our network design reflects this balance.
