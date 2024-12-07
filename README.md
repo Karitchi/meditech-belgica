@@ -4,7 +4,7 @@
 
 https://github.com/Karitchi/meditech-belgica/wiki
 
-## membre du groupe
+## membres du groupe
 
 - Nicolas Biermez:
 - Alexis Jacobs:
