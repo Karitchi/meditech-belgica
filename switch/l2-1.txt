@@ -1,0 +1,204 @@
+l2-1#show running-config
+Building configuration...
+
+Current configuration : 4816 bytes
+!
+! Last configuration change at 13:41:13 UTC Thu Dec 12 2024
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+service compress-config
+!
+hostname l2-1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+logging buffered 4096
+enable secret 5 $1$k5oN$8Gwiwv5l/q3a5Fj.4FAx2.
+!
+username admin privilege 15 secret 5 $1$YPK6$fZ8pDH5IDSDhQ4Ro1Aaah1
+no aaa new-model
+!
+!
+!
+!
+!
+ip arp inspection vlan 10,20
+!
+!
+!
+ip dhcp snooping vlan 10-20
+ip dhcp snooping
+no ip domain-lookup
+ip domain-name meditechbelgica.be
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+no cdp run
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ switchport trunk allowed vlan 10,20
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ ip arp inspection trust
+ negotiation auto
+ ip dhcp snooping trust
+!
+interface GigabitEthernet0/1
+ negotiation auto
+!
+interface GigabitEthernet0/2
+ negotiation auto
+!
+interface GigabitEthernet0/3
+ negotiation auto
+!
+interface GigabitEthernet1/0
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security violation restrict
+ switchport port-security mac-address sticky
+ negotiation auto
+!
+interface GigabitEthernet1/1
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security violation restrict
+ switchport port-security mac-address sticky
+ negotiation auto
+!
+interface GigabitEthernet1/2
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security violation restrict
+ switchport port-security mac-address sticky
+ negotiation auto
+!
+interface GigabitEthernet1/3
+ negotiation auto
+!
+interface GigabitEthernet2/0
+ switchport access vlan 20
+ switchport mode access
+ switchport port-security violation restrict
+ switchport port-security mac-address sticky
+ negotiation auto
+!
+interface GigabitEthernet2/1
+ switchport access vlan 20
+ switchport mode access
+ switchport port-security violation restrict
+ switchport port-security mac-address sticky
+ negotiation auto
+!
+interface GigabitEthernet2/2
+ negotiation auto
+!
+interface GigabitEthernet2/3
+ negotiation auto
+!
+interface GigabitEthernet3/0
+ negotiation auto
+!
+interface GigabitEthernet3/1
+ negotiation auto
+!
+interface GigabitEthernet3/2
+ negotiation auto
+!
+interface GigabitEthernet3/3
+ negotiation auto
+!
+interface Vlan50
+ ip address 10.50.0.201 255.255.255.0
+!
+ip forward-protocol nd
+!
+ip http server
+!
+ip ssh version 2
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+access-list 50 permit 10.50.0.0 0.0.0.255
+access-list 50 deny   any log
+!
+!
+!
+!
+control-plane
+!
+banner exec ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+banner incoming ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+banner login ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+!
+line con 0
+ exec-timeout 15 0
+ password 7 001707135609
+ login
+line aux 0
+line vty 0 4
+ access-class 50 in
+ exec-timeout 15 0
+ password 7 0832585B5B4B
+ login
+ transport input ssh
+line vty 5 15
+ access-class 50 in
+ exec-timeout 15 0
+ password 7 0832585B5B4B
+ login
+ transport input ssh
+!
+!
+end
+
+
+
