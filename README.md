@@ -1,12 +1,10 @@
-# meditech-belgica
-
-## rapport de sécurité des réseaux 
+# Rapport de Projet de Sécurité des Réseaux
 
 https://github.com/Karitchi/meditech-belgica/wiki
 
-## membres du groupe
+## Membres du Groupe
 
-- Nicolas Biermez:
-- Alexis Jacobs:
-- Louis Abraham:
+- Nicolas Biermez
+- Alexis Jacobs
+- Louis Abraham
 - Noel Yando Fotso Junior
